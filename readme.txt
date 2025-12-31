@@ -1,71 +1,124 @@
+# MiniGit – A Simplified Version Control System in C++
 
-void move(string file, string dest,SLL* curr);
-    this is my copy function. I read current file and copy it to minigit with ofstream out(".minigit/"+fileversion)
-    
-    void change(string file, string change);
-        same as move function but I do the reverse. I read from minigit and copy it to directory
-        this is only used for checkout
+## Overview
 
+**MiniGit** is a lightweight, console-based version control system implemented from scratch in **C++**.  
+It recreates the core ideas behind Git—tracking files, committing changes, and checking out previous versions—without relying on external libraries or existing VCS tools.
 
-void MakeSLL(string fName);
+This project was built to demonstrate a deep understanding of **data structures, file systems, and system-level programming concepts** by implementing version control logic manually.
 
-This function was created to make a node of the added file and attach it to the current resposirtory linked list
-it really doesnt have anything special
+---
 
+## Key Features
 
+- Initialize a local repository (`.minigit`) to store file versions
+- Add files to version tracking
+- Remove files from tracking
+- Commit snapshots of tracked files
+- Automatically detect file changes and version them
+- Checkout (restore) any previous commit
+- Maintain a full commit history in memory
 
+---
 
-void miniGit::addFile()
-    first I looped untile our current commitnumber ( double linked list)
-    second I made sure if the file given is in directory
-    then i called the makesll function mentioned above
-  
+## Technologies Used
 
+- **Language:** C++ (C++17)
+- **Standard Libraries:**
+  - `<filesystem>` for directory and file management
+  - `<fstream>` for file I/O
+  - `<iostream>` for console interaction
+- **Data Structures:**
+  - Doubly Linked List (commit history)
+  - Singly Linked List (files per commit)
 
+---
 
-void miniGit::removeFile(string filename)
-This function was created to delete nodes from the linked list
+## How the System Works
 
+### Repository Structure
 
+When initialized, MiniGit creates a hidden directory called `.minigit`.  
+This directory stores all historical versions of tracked files using versioned filenames.
 
+Example:
+```
+.minigit/
+├── 00example.txt
+├── 01example.txt
+├── 00notes.md
+```
 
+Each version prefix (`00`, `01`, `02`, etc.) represents a new version of the file.
 
+---
 
+### Data Structures
 
-void miniGit::commit(int n)
-n is the current commit number. I traverse the dll to the one withe same commit number.
-I also check edge cases where given list is null so I would stop the list right there and make 
-the new commit without having to read files which would result in error
+- **Commit History:**  
+  Implemented as a **doubly linked list**, where each node represents a commit.
+  - Stores:
+    - Commit number
+    - Pointer to a list of tracked files
+    - Pointers to previous and next commits
 
-Then I read and compared all files with getline, as soon as there is a difference I stop and call the move function
-before calling the move function I adjust the file version with this
+- **Tracked Files:**  
+  Each commit contains a **singly linked list** of file records.
+  - Each node stores:
+    - Original file name
+    - Versioned file name (stored in `.minigit`)
 
-                        string attend=curr->fileVersion;
-                        int cap=curr->fileVersion.size()-curr->fileName.size();
-                        string sub=attend.substr(0,cap);
-                        int m= stoi(sub);
-                        m++;
-                        string all;
-                        string neo=to_string(m);
-Basically I have the version in the beginning so I make a new substr convert it to int increment then return it to string
+---
 
-lastly,
-I copy the linked list to new linked list
+### Adding Files
 
+- Validates that the file exists in the working directory
+- Prevents duplicate tracking of the same file
+- Assigns an initial version number (`00`)
+- Adds the file to the current commit’s file list
 
+---
 
+### Committing Changes
 
+When committing:
+1. Each tracked file is compared against its last saved version
+2. If the file is **new**, it is copied to `.minigit` with version `00`
+3. If the file **changed**, a new version number is generated and stored
+4. If unchanged, the previous version is reused
+5. A new commit node is created with a deep copy of the file list
 
-void miniGit::checkout(int num)
+---
 
-first I looped untile our chosen current commitnumber ( double linked list)
-then I remove the files in directory and then copy files from minigit to directory;
-also I print the linked list to know what version I checkout()
+### Checkout (Restore a Commit)
 
+- Removes current working files if needed
+- Retrieves the correct versions from `.minigit`
+- Restores the project directory to match the selected commit exactly
 
-void start();
-this is the menu. it calls all functions needed. it is what I put in drivere so it looks clean
+---
 
+## Why This Project Matters
 
-void print();
-prints linked list for every commit
+This project demonstrates:
+
+- Strong C++ fundamentals
+- Practical use of data structures
+- System-level design thinking
+- Understanding how real tools like Git work internally
+
+---
+
+## How to Run
+
+```bash
+g++ -std=c++17 main.cpp -o minigit
+./minigit
+```
+
+---
+
+## Author
+
+**Majed Zamzami**  
+Computer Science Graduate
